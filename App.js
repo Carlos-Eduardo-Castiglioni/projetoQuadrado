@@ -1,61 +1,74 @@
-// Importa React e useState para gerenciar estado
 import React, { useState } from 'react';
-// Importa componentes do React Native
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-// Define o componente principal App
-export default function App() {
-  // Define estados para armazenar os valores de base, altura, resultado e erro
-  const [base, setBase] = useState('');
-  const [altura, setAlturaQuad] = useState('');
-  const [quadResult, setQuadResult] = useState(null);
-  const [quadError, setQuadError] = useState(null);
 
-  // Função para lidar com o cálculo do quadrado/retângulo
-  const handleQuadrado = async () => {
+export default function App() {
+  // Define estados para armazenar os valores dos lados e os resultados
+  const [lado1, setLado1] = useState('');
+  const [lado2, setLado2] = useState('');
+  const [lado3, setLado3] = useState('');
+  const [lado4, setLado4] = useState('');
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
+
+  // Função para lidar com o cálculo de quadrado/retângulo
+  const handleCalculation = async () => {
     try {
-      setQuadError(null); // Reseta o estado de erro
-      // Faz a requisição para o servidor com os parâmetros base e altura
+      setError(null); // Reseta o estado de erro
+      // Faz a requisição para o servidor com os parâmetros dos quatro lados
       const response = await fetch(
-        `http://192.168.15.14:3030/quadrado?base=${base}&altura=${altura}`
+        `http://172.16.7.3:3030/quadrado?lado1=${lado1}&lado2=${lado2}&lado3=${lado3}&lado4=${lado4}`
       );
       const data = await response.json(); // Converte a resposta para JSON
 
       if (response.ok) {
-        setQuadResult(data.result); // Se a resposta for bem-sucedida, define o resultado
+        setResult(data.result); // Se a resposta for bem-sucedida, define o resultado
       } else {
-        setQuadError(data.error); // Se houver um erro, define o estado de erro
-        setQuadResult(null); // Reseta o resultado
+        setError(data.error); // Se houver um erro, define o estado de erro
+        setResult(null); // Reseta o resultado
       }
     } catch (err) {
-      setQuadError('Erro de rede ou servidor!'); // Define o erro de rede ou servidor
-      setQuadResult(null); // Reseta o resultado
+      setError('Erro de rede ou servidor!'); // Define o erro de rede ou servidor
+      setResult(null); // Reseta o resultado
     }
   };
 
   return (
-     // Contêiner principal da aplicação
     <View style={styles.container}>
       <Text style={styles.title}>Calcular Área de Quadrado/Retângulo</Text>
 
       <TextInput
         style={styles.input}
         keyboardType="numeric"
-        placeholder="Base"
-        value={base}
-        onChangeText={setBase}
+        placeholder="Lado 1"
+        value={lado1}
+        onChangeText={setLado1}
       />
       <TextInput
         style={styles.input}
         keyboardType="numeric"
-        placeholder="Altura"
-        value={altura}
-        onChangeText={setAlturaQuad}
+        placeholder="Lado 2"
+        value={lado2}
+        onChangeText={setLado2}
+      />
+      <TextInput
+        style={styles.input}
+        keyboardType="numeric"
+        placeholder="Lado 3"
+        value={lado3}
+        onChangeText={setLado3}
+      />
+      <TextInput
+        style={styles.input}
+        keyboardType="numeric"
+        placeholder="Lado 4"
+        value={lado4}
+        onChangeText={setLado4}
       />
 
-      <Button title="Calcular Área" onPress={handleQuadrado} />
+      <Button title="Calcular Área" onPress={handleCalculation} />
 
-      {quadResult !== null && <Text style={styles.result}>Resultado: {quadResult}</Text>}
-      {quadError && <Text style={styles.error}>Erro: {quadError}</Text>}
+      {result !== null && <Text style={styles.result}>Resultado: {result}</Text>}
+      {error && <Text style={styles.error}>Erro: {error}</Text>}
     </View>
   );
 }
