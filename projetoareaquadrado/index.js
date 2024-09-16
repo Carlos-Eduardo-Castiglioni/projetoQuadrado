@@ -11,43 +11,39 @@ app.use(express.json());
 morgan.format('custom', ':remote-addr :method :url :status :response-time ms');
 app.use(morgan('custom')); // Usa o formato personalizado para o log
 
-
 app.get('/quadrado', (req, res, next) => {
     try {
-        const {base, altura} = req.query;
-
-        
+        const { lado1, lado2, lado3, lado4 } = req.query;
 
         // Verifica se todos os parâmetros estão presentes
-        if (base === undefined || altura === undefined) {
+        if (lado1 === undefined || lado2 === undefined || lado3 === undefined || lado4 === undefined) {
             throw new Error('Parâmetros insuficientes!');
         }
 
         // Converte os parâmetros para números
-        const bas = parseFloat(base);
-        const alt = parseFloat(altura);
-        
+        const lad1 = parseFloat(lado1);
+        const lad2 = parseFloat(lado2);
+        const lad3 = parseFloat(lado3);
+        const lad4 = parseFloat(lado4);
 
         // Verifica se os parâmetros são números válidos
-        if (isNaN(bas) || isNaN(alt)) {
+        if (isNaN(lad1) || isNaN(lad2) || isNaN(lad3) || isNaN(lad4)) {
             throw new Error('Parâmetros inválidos!');
         }
 
         let result;
-        
-        let area
-        area = bas * alt;
 
-        //se base for igual a altura 
-        if (bas == alt){
-            result= `A base ${bas} vezes a altura ${alt} é um quadrado, com a área de ${area}`
-        } 
-        //também se base não é igual a altura
-        else if(bas != alt) {
-            result = `A base ${bas} vezes a altura ${alt} é um retângulo, com a área de ${area}`
+        if (lad1 === lad2 && lad2 === lad3 && lad3 === lad4) {
+            // Quadrado
+            const area = lad1 * lad1;
+            result = `O quadrado com lado de ${lad1} tem uma área de ${area}.`;
+        } else if (lad1 === lad3 && lad2 === lad4) {
+            // Retângulo
+            const area = lad1 * lad2;
+            result = `O retângulo com base ${lad1} e altura ${lad2} tem uma área de ${area}.`;
+        } else {
+            result = 'Os lados fornecidos não formam um quadrado nem um retângulo.';
         }
-         
-        
 
         res.json({ result });
     } catch (error) {
@@ -62,5 +58,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-    console.log(`API rodando em http://192.168.15.14:${port}`);
+    console.log(`API rodando em http://172.16.7.3:${port}`);
 });

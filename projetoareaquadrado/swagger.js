@@ -12,7 +12,7 @@ const options = {
     },
     servers: [
       {
-        url: 'http://192.168.15.14:3030',
+        url: 'http://172.16.7.3:3030',
         description: 'Servidor local',
       },
     ],
